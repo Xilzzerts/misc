@@ -30,7 +30,7 @@ mmap_helper::mmap_helper(const char *path, uint32_t type)
     int ret = stat(path, &buf);
     if(ret != 0)
     {
-        _reason = ENOENT;
+        _reason = errno;
         return;
     }
     ret = open(path, O_RDWR);
