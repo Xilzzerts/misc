@@ -6,15 +6,16 @@
 
 mmap_helper::mmap_helper(const char *path, uint32_t type)
 {
+    _mem = NULL;
+    _len = 0;
+    _reason = 0;
+    _type = 0;
+
     if(!path)
     {
         _reason = EINVAL;
         return;
     }
-    _mem = NULL;
-    _len = 0;
-    _reason = 0;
-    _type = 0;
     uint32_t flag;
     switch(type)
     {
