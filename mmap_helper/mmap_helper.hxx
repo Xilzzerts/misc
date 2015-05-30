@@ -16,6 +16,8 @@ class mmap_helper
 public:
     mmap_helper() = delete;
     mmap_helper(const char *path, uint32_t type);
+    //arg3 is ignore, just for overload
+    mmap_helper(const char *path, uint32_t len, bool newfile);
     mmap_helper(const mmap_helper &) = delete;
     mmap_helper &operator=(mmap_helper &) = delete;
     ~mmap_helper();

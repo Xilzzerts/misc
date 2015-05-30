@@ -48,6 +48,43 @@ mmap_helper::mmap_helper(const char *path, uint32_t type)
         _reason = errno;
         return;
     }
+    _len = buf.st_size;
+    close(ret);
+}
+
+mmap_helper::mmap_helper(const char *path, uint32_t len, bool newfile)
+{
+    _mem = NULL;
+    _len = 0;
+    _reason = 0;
+    _type = 0;
+
+    if(!path || !len)
+    {
+        _reason = EINVAL;
+        return;
+    }
+    int ret = access(path, F_OK);
+    if(ret == 0)
+    {
+        _reason = EEXIST;
+        return;
+    }
+    ret = open(path, O_RDWR | O_CREAT, 0755);
+    if(ret < 0)
+    {
+        _reason = errno;
+        return;
+    }
+    ftruncate(ret, len);
+    _mem = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, ret, 0);
+    if(!_mem)
+    {
+        _reason = errno;
+        return;
+    }
+    _len = len;
+    _type = MAP_TYPE_SHARED;
     close(ret);
 }
 
