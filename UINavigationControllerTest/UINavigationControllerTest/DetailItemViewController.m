@@ -16,8 +16,13 @@
 
 -(void)setItem:(NSString *)item
 {
+    NSLog(@"1");
     _item = item;
-    [self.label setText:_item];
     [self.navigationController navigationItem].title = _item;
+}
+
+-(void)viewDidLoad
+{
+    [self.label setText:_item];
 }
 @end
