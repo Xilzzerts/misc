@@ -16,7 +16,6 @@
 
 -(void)setItem:(NSString *)item
 {
-    NSLog(@"1");
     _item = item;
     [self.navigationController navigationItem].title = _item;
 }
