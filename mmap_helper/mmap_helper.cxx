@@ -14,6 +14,7 @@ mmap_helper::mmap_helper(const char *path, uint32_t type)
     _mem = NULL;
     _len = 0;
     _reason = 0;
+    _type = 0;
     uint32_t flag;
     switch(type)
     {
@@ -26,6 +27,7 @@ mmap_helper::mmap_helper(const char *path, uint32_t type)
         default:
             flag = MAP_PRIVATE;
     }
+    _type = flag;
     struct stat buf;
     int ret = stat(path, &buf);
     if(ret != 0)
@@ -51,4 +53,12 @@ mmap_helper::mmap_helper(const char *path, uint32_t type)
 mmap_helper::~mmap_helper()
 {
     munmap(_mem, _len);
+}
+
+void mmap_helper::sync()
+{
+    if(_type == MAP_TYPE_SHARED && _mem && _len)
+    {
+        msync(_mem, _len, MS_SYNC);
+    }
 }

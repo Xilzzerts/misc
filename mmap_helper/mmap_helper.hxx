@@ -22,9 +22,11 @@ public:
     void *get_mem(){return _mem;}
     uint32_t get_len(){return _len;}
     uint32_t get_error_reason(){return _reason;}
+    void sync();
 private:
     void *_mem;
     uint32_t _len;
     uint32_t _reason;
+    uint32_t _type;
 };
 #endif
