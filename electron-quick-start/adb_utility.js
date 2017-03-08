@@ -29,6 +29,9 @@ function parse_meminfo(stdout, key_word, column) {
     let key_lines = stdout.split(/\r\n|\n/).filter((v) => {
         let line = v.trim();
         for(let i = 0; i < key_word.length; ++i) {
+            if(line.startsWith(key_word[i] + ':')) {
+                return false;
+            }
             if(line.startsWith(key_word[i])) {
                 return true;
             }
