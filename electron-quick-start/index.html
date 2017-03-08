@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Memory Monitor</title>
+    <script>window.$ = window.jQuery = require('./jquery-3.1.1.min.js');</script>
+    <script src="./chart.js"></script>
+    <script src="./adb_utility.js"></script>
+  </head>
+  <body>
+      <div>
+          <canvas id="meminfo"></canvas>
+      </div>
+      <div>
+        <select id="devices_select" width="20px">
+        </select>
+        <select id="package_name_select">
+        </select>
+        <select id="type_select">
+            <option value="Native Heap">Native Heap</option>
+            <option value="Dalvik Heap">Dalvik Heap</option>
+            <option value="TOTAL">TOTAL</option>
+        </select>
+        <button type="button" id="start_button">Start!</button>
+        <button type="button" id="stop_button">Stop!</button>
+        <button type="button" id="clean_button">Clean!</button>
+      </div>
+      <script>
+          let ctx = document.getElementById("meminfo");
+          chart(ctx);
+          let selected;
+          let selected_process;
+          //
+          let devices = $('#devices_select');
+          devices.click(() => {
+             let list = [];
+             get_devices_list().then((v) => {
+                 if(v) list = v;
+                 if(list.length > 0) {
+                     devices.find('option').remove().end();
+                     list.map((f) => {
+                        devices.append(`<option value="${f}">${f}</option>`) ;
+                     });
+                 } else {
+                     console.log('no device');
+                 }
+             });
+          });
+
+          let processes = $('#package_name_select');
+          processes.mousedown(() => {
+              selected = $("#devices_select option:selected").val();
+              console.log(selected);
+              let list = [];
+              get_process_list(selected).then((v) => {
+                  if(v) list = v;
+                  if(list.length > 0) {
+                      processes.find('option').remove().end();
+                      list.map((f) => {
+                         processes.append(`<option value="${f}">${f}</option>`) ;
+                      });
+                  } else {
+                      console.log('no device');
+                  }
+              });
+          });
+          //let selected_process = $("#package_name_select option:selected").text();
+          $('#start_button').click(() => {
+              selected_process = $("#package_name_select option:selected").text();
+              key_word = $("#type_select option:selected").text();
+              if(selected && selected_process) {
+                  start_monitoring(ctx, selected, selected_process, key_word, 1000);
+              }
+          });
+          $('#stop_button').click(() => {
+              stop_monitoring();
+          });
+          $('#clean_button').click(() => {
+              clean();
+          });
+      </script>
+  </body>
+
+  <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+  </script>
+</html>
